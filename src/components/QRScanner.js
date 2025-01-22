@@ -37,8 +37,8 @@ const QRScanner = () => {
           { facingMode: "environment" },
           {
             fps: 10,
-            qrbox: { width: 250, height: 250 },
-            aspectRatio: 16 / 9,
+            qrbox: undefined,
+            aspectRatio: 1,
           },
           (decodedResult) => {
             console.log(`Code matched = ${decodedResult}`);
@@ -381,26 +381,7 @@ const handleToggleCamera = async () => {
       }}
     ></video>
 
-    {/* Dropdown to Select Available Cameras */}
-    {availableCameras.length > 1 && (
-      <select
-        onChange={(e) => handleSwitchCamera(e.target.value)} // Trigger camera switch
-        value={selectedCamera}
-        style={{
-          padding: "10px",
-          borderRadius: "5px",
-          border: "1px solid #ccc",
-          fontSize: "clamp(0.9rem, 1.2vw, 1rem)",
-          marginBottom: "10px",
-        }}
-      >
-        {availableCameras.map((camera, index) => (
-          <option key={index} value={camera.deviceId}>
-            {camera.label || `Camera ${index + 1}`}
-          </option>
-        ))}
-      </select>
-    )}
+  
 
     {/* Button to Toggle Between Front and Back Cameras */}
     {availableCameras.length > 1 && (
