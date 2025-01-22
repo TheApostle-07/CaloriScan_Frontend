@@ -320,68 +320,75 @@ const QRScanner = () => {
       </div>
 
       {mode === "camera" && !capturedImage && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginTop: "20px",
-          }}
-        >
-          <video
-            ref={videoRef}
-            autoPlay
-            style={{
-              width: "100%",
-              maxWidth: "400px",
-              objectFit: "cover",
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      marginTop: "20px",
+    }}
+  >
+    {/* Video Element for Camera Preview */}
+    <video
+      ref={videoRef}
+      autoPlay
+      style={{
+        width: "100%",
+        maxWidth: "400px",
+        objectFit: "cover",
+        aspectRatio: "1/1",
+        border: "2px solid white",
+        borderRadius: "10px",
+        marginBottom: "10px",
+      }}
+    ></video>
 
-              aspectRatio: "1/1",
-              border: "2px solid white",
-              borderRadius: "10px",
-              marginBottom: "10px",
-            }}
-          ></video>
-          {availableCameras.length > 1 && (
-            <select
-              onChange={(e) => handleSwitchCamera(e.target.value)}
-              value={selectedCamera}
-              style={{
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-                fontSize: "clamp(0.9rem, 1.2vw, 1rem)",
-              }}
-            >
-              {availableCameras.map((camera, index) => (
-                <option key={index} value={camera.deviceId}>
-                  {camera.label || `Camera ${index + 1}`}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-      )}
+    {/* Dropdown to Select Available Cameras */}
+    {availableCameras.length > 1 && (
+      <select
+        onChange={(e) => handleSwitchCamera(e.target.value)} // Trigger camera switch
+        value={selectedCamera}
+        style={{
+          padding: "10px",
+          borderRadius: "5px",
+          border: "1px solid #ccc",
+          fontSize: "clamp(0.9rem, 1.2vw, 1rem)",
+          marginBottom: "10px",
+        }}
+      >
+        {availableCameras.map((camera, index) => (
+          <option key={index} value={camera.deviceId}>
+            {camera.label || `Camera ${index + 1}`}
+          </option>
+        ))}
+      </select>
+    )}
 
-      {capturedImage && (
-        <div
-          style={{
-            marginTop: "20px",
-            textAlign: "center",
-          }}
-        >
-          <img
-            src={capturedImage}
-            alt="Captured"
-            style={{
-              width: "100%",
-              maxWidth: "400px",
-              border: "4px solid white",
-              borderRadius: "10px",
-            }}
-          />
-        </div>
-      )}
+    {/* Button to Toggle Between Front and Back Cameras */}
+    {availableCameras.length > 1 && (
+      <button
+        onClick={() =>
+          handleSwitchCamera(
+            availableCameras.find(
+              (camera) => camera.deviceId !== selectedCamera
+            )?.deviceId
+          )
+        }
+        style={{
+          padding: "10px 20px",
+          backgroundColor: "#007ea7",
+          color: "white",
+          borderRadius: "5px",
+          border: "none",
+          fontSize: "clamp(0.9rem, 1.2vw, 1rem)",
+          cursor: "pointer",
+        }}
+      >
+        Switch Camera
+      </button>
+    )}
+  </div>
+)}
 
       {detectionResults && (
         <div
