@@ -34,7 +34,7 @@ const teamMembers = [
     image: "/images/shivam.jpeg",
     quote: "The best way to predict the future is to invent it.",
     verse: "- Alan Kay",
-    portfolio: "https://gulshanportfollio.netlify.app/",
+    portfolio: "https://shivamsinghpro.netlify.app/",
     socials: {
       github: "https://github.com/ShivamSingh0111",
       linkedin: "https://www.linkedin.com/in/shivam-singh-08437832a/",
