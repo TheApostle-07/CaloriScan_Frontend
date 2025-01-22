@@ -435,7 +435,7 @@ const handleToggleCamera = async () => {
         width: "100%",
         maxWidth: "400px",
         maxHeight: "400px",
-        aspectRatio: "16/9", // Ensures a square container
+        aspectRatio: "1/1", // Ensures a square container
         margin: "20px auto",
         border: "4px solid var(--white)", // Consistent with theme
         borderRadius: "10px",
