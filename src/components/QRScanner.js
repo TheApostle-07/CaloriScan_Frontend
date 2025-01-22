@@ -113,35 +113,73 @@ const QRScanner = () => {
     }
   };
 
-  // Handle Camera Mode
-  const handleDetectCamera = async () => {
-    setCapturedImage(null);
-    setMode("camera");
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      videoRef.current.srcObject = stream;
+ const handleDetectCamera = async () => {
+  setCapturedImage(null);
+  setMode("camera");
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    videoRef.current.srcObject = stream;
 
-      const devices = await navigator.mediaDevices.enumerateDevices();
-      const videoDevices = devices.filter((device) => device.kind === "videoinput");
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter((device) => device.kind === "videoinput");
+    
+    if (videoDevices.length > 0) {
       setAvailableCameras(videoDevices);
-      setSelectedCamera(videoDevices[0]?.deviceId || null);
-    } catch (error) {
-      console.error("Error accessing camera:", error);
-      setStatusMessage("Unable to access the camera. Please try again.");
+      setSelectedCamera(videoDevices[0].deviceId); // Default to the first camera
+    } else {
+      console.warn("No video devices found.");
+      setStatusMessage("No cameras detected.");
     }
-  };
+  } catch (error) {
+    console.error("Error accessing camera:", error);
+    setStatusMessage("Unable to access the camera. Please try again.");
+  }
+};
+
+
+const handleToggleCamera = async () => {
+  const newFacingMode = selectedCamera === "environment" ? "user" : "environment";
+  setSelectedCamera(newFacingMode);
+
+  try {
+    // Stop the current video stream
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach((track) => track.stop());
+    }
+
+    // Start a new stream with the updated facing mode
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: newFacingMode },
+    });
+    videoRef.current.srcObject = stream;
+  } catch (error) {
+    console.error("Error toggling camera:", error);
+    setStatusMessage("Unable to toggle camera. Please try again.");
+  }
+};
 
   const handleSwitchCamera = async (deviceId) => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: { exact: deviceId } },
-      });
-      videoRef.current.srcObject = stream;
-      setSelectedCamera(deviceId);
-    } catch (error) {
-      console.error("Error switching camera:", error);
+  try {
+    // Stop the current video stream if it exists
+    if (videoRef.current && videoRef.current.srcObject) {
+      const tracks = videoRef.current.srcObject.getTracks();
+      tracks.forEach((track) => track.stop());
     }
-  };
+
+    // Request a new video stream with the selected camera
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { deviceId: { exact: deviceId } },
+    });
+
+    // Set the new stream to the video element
+    videoRef.current.srcObject = stream;
+    setSelectedCamera(deviceId);
+  } catch (error) {
+    console.error("Error switching camera:", error);
+    setStatusMessage("Unable to switch camera. Please try again.");
+  }
+};
 
   
   const handleCaptureImage = async () => {
